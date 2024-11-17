@@ -7,10 +7,10 @@ class ServoDrive:
         self.power = power
 
     def __str__(self):
-        return f'ServoDrive(model={self.model}, power={self.power})'
+        return f'{self.__class__.__name__}(model={self.model}, power={self.power})'
 
     def __repr__(self):
-        return f'ServoDrive(model={self.model!r}, power={self.power!r})'
+        return f'{self.__class__.__name__}(model={self.model!r}, power={self.power!r})'
     
 
 class SpinnableServoDrive(ServoDrive):
@@ -20,10 +20,10 @@ class SpinnableServoDrive(ServoDrive):
         self.direction = direction
 
     def __str__(self):
-        return f'SpinnableServoDrive(model={self.model}, power={self.power}, max_speed={self.max_speed}, direction={self.direction})'
+        return f'{self.__class__.__name__}(model={self.model}, power={self.power}, max_speed={self.max_speed}, direction={self.direction})'
 
     def __repr__(self):
-        return f'SpinnableServoDrive(model={self.model!r}, power={self.power!r}, max_speed={self.max_speed!r}, direction={self.direction!r})'
+        return f'{self.__class__.__name__}(model={self.model!r}, power={self.power!r}, max_speed={self.max_speed!r}, direction={self.direction!r})'
 
 @total_ordering # определили 1 оператор сравнения < и автоматически аннотация генерирует остальные сравн. операторы
 class SynchronousServoDrive(SpinnableServoDrive):
@@ -32,14 +32,14 @@ class SynchronousServoDrive(SpinnableServoDrive):
         self.synchronization_time = synchronization_time
 
     def __str__(self):
-        return f'SynchronousServoDrive(model={self.model},\
+        return f'{self.__class__.__name__}(model={self.model},\
             power={self.power},\
             synchronization_time={self.synchronization_time}),\
             max_speed={self.max_speed},\
             direction={self.direction}'
 
     def __repr__(self):
-        return f'SynchronousServoDrive(model={self.model!r},\
+        return f'{self.__class__.__name__}(model={self.model!r},\
             power={self.power!r},\
             synchronization_time={self.synchronization_time!r}),\
             max_speed={self.max_speed!r},\
@@ -61,14 +61,14 @@ class AsynchronousServoDrive(SpinnableServoDrive):
         self.async_jobs = async_jobs
 
     def __str__(self):
-        return f'SynchronousServoDrive(model={self.model},\
+        return f'{self.__class__.__name__}(model={self.model},\
             power={self.power},\
             async_jobs={self.async_jobs}),\
             max_speed={self.max_speed},\
             direction={self.direction}'
 
     def __repr__(self):
-        return f'SynchronousServoDrive(model={self.model!r},\
+        return f'{self.__class__.__name__}(model={self.model!r},\
             power={self.power!r},\
             async_jobs={self.async_jobs!r}),\
             max_speed={self.max_speed!r},\
