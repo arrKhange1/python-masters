@@ -22,5 +22,15 @@ class Queue:
         return len(self.items) == 0
 
 
+queue = Queue()
+queue.enqueue(1)
+queue.enqueue(2)
+queue.enqueue(3)
+
+print("Первый элемент:", queue.peek())  
+print("Удаляем элемент:", queue.dequeue()) 
+print("Новый первый элемент:", queue.peek())
+print("Очередь пуста?", queue.is_empty())
+print("Размер очереди:", queue.size()) 
 
     
