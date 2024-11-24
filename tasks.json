@@ -1,20 +1,8 @@
 [
     {
-        "category": "home",
-        "description": "Cook",
-        "id": 1,
+        "category": "pstu",
+        "description": "balamut",
+        "id": 2,
         "is_done": true
-    },
-    {
-        "category": "joje",
-        "description": "Boo ",
-        "id": 3,
-        "is_done": 0
-    },
-    {
-        "category": "lol",
-        "description": "Keke",
-        "id": 4,
-        "is_done": 0
     }
 ]
