@@ -1,35 +1,54 @@
+from dataclasses import dataclass
+import dataclasses
 import json
 import os
-from typing import List, Dict
+from typing import List, Dict, Optional
 
-class JsonManager:
+@dataclass
+class Transaction:
+    description: str
+    category: str
+    amount: int
+    id: Optional[int] = None
 
-    file_name = 'tasks.json'
+    def __getitem__(self, item):
+        return getattr(self, item)
 
-    def export_json(self, tasks):
-        jsonedTasks = json.dumps(tasks, sort_keys=True, indent=4)
-        with open(self.file_name, 'w') as file:
+class TransactionJsonManager:
+
+    def __init__(self, file_name):
+        self._file_name = file_name
+
+    def export_json(self, list_of_obj: List[Transaction]):
+        jsonedTasks = json.dumps([dataclasses.asdict(obj) for obj in list_of_obj], sort_keys=True, indent=4)
+        with open(self._file_name, 'w') as file:
             file.write(jsonedTasks)
 
-    def import_json(self):
-        if not os.path.isfile(self.file_name): return []
-        with open(self.file_name, 'r') as file:
-            return json.load(file)
+    def import_json(self) -> List[Transaction]:
+        if not os.path.isfile(self._file_name): return []
+        with open(self._file_name, 'r') as file:
+            return [Transaction(**obj) for obj in json.load(file)]
 
 class TransactionManager:
-    transactions: List[Dict[str, any]] = []
+    transactions: List[Transaction] = []
 
-    def __init__(self, transactions):
+    def __init__(self, transactions: List[Transaction]):
         self.transactions = transactions
 
-    def get_transactions(self):
+    def get_transactions(self) -> List[Transaction]:
         return self.transactions
 
-    def add(self, transaction):
+    def add(self, transaction: Transaction):
         new_transaction_id = self.transactions[-1]['id']+1 if len(self.transactions) else 1
-        self.transactions.append({**transaction, 'is_done': 0, 'id': new_transaction_id})
+        self.transactions.append(
+            Transaction(
+                id=new_transaction_id,
+                amount=transaction.amount,
+                description=transaction.description,
+                category=transaction.category
+            ))
     
-    def remove(self, id):
+    def remove(self, id: int):
         self.transactions = [transaction for transaction in self.transactions if transaction['id'] != id]
 
     def print_transactions(self):
@@ -41,10 +60,10 @@ class TransactionManager:
 
 class BudgetTracker:
     transactionManager: TransactionManager
-    jsonManager: JsonManager
+    jsonManager: TransactionJsonManager
 
     def __init__(self):
-        self.jsonManager = JsonManager()
+        self.jsonManager = TransactionJsonManager('transactions.json')
         transactions_from_json = self.jsonManager.import_json()
         self.transactionManager = TransactionManager(transactions_from_json)
 
@@ -54,13 +73,16 @@ class BudgetTracker:
             print('\nOptions:\n1. Add transaction\n2. Remove transaction\n3. Export as JSON\n4. Quit')
             match input('Enter desired option: \n'): 
                 case '1':
-                    self.transactionManager.add({
-                            'description': input('Enter transaction description: '), 
-                            'category': input('Enter transaction category: ')})
+                    self.transactionManager.add(
+                        Transaction(
+                            description=input('Enter transaction description: '),
+                            amount=int(input('Enter transaction amount: ')),
+                            category=input('Enter transaction category: ')
+                        ))
                 case '2':
                     self.transactionManager.remove(int(input('Enter id of a transaction to be removed: ')))
                 case '3':
-                    self.jsonManager.export_json(self.transactionManager.get_tasks())
+                    self.jsonManager.export_json(self.transactionManager.get_transactions())
                 case '4':
                     print('Budget Tracker finished work')
                     return
